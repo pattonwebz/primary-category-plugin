@@ -21,11 +21,11 @@ class PWWP_Widget_Primary_Categories extends WP_Widget {
      */
     public function __construct() {
         $widget_ops = array(
-            'classname' => 'widget_primary_categories',
+            'classname' => 'pwwp_widget_primary_categories',
             'description' => __( 'A list or dropdown of only `primary` categories.' ),
             'customize_selective_refresh' => true,
         );
-        parent::__construct( 'primary_categories', __( 'Primary Categories' ), $widget_ops );
+        parent::__construct( 'pwwp_primary_categories', __( 'Primary Categories' ), $widget_ops );
     }
 
     /**
@@ -68,7 +68,7 @@ class PWWP_Widget_Primary_Categories extends WP_Widget {
              *
              * @param array $cat_args An array of Categories widget drop-down arguments.
              */
-            wp_dropdown_categories( apply_filters( 'widget_primary_categories_dropdown_args', $cat_args ) );
+            wp_dropdown_categories( apply_filters( 'pwwp_widget_primary_categories_dropdown_args', $cat_args ) );
             ?>
 
 <script type='text/javascript'>
@@ -97,7 +97,7 @@ class PWWP_Widget_Primary_Categories extends WP_Widget {
          *
          * @param array $cat_args An array of Categories widget options.
          */
-        wp_list_categories( apply_filters( 'widget_primary_categories_args', $cat_args ) );
+        wp_list_categories( apply_filters( 'pwwp_widget_primary_categories_args', $cat_args ) );
 ?>
         </ul>
 <?php
@@ -152,3 +152,8 @@ class PWWP_Widget_Primary_Categories extends WP_Widget {
     }
 
 }
+
+function pwwp_register_primary_category_widget() {
+	register_widget( 'pwwp_widget_primary_categories');
+}
+add_action( 'widgets_init', 'pwwp_register_primary_category_widget' );
