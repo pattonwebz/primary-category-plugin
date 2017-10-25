@@ -15,8 +15,8 @@ class pwwp_primary_category_metabox_modifications {
 	public function __construct() {
 		// Output the script in the post edit and new post pages or admin.
 		add_action( 'admin_enqueue_scripts', array( $this, 'output_primary_category_admin_script' ), 10 );
-		// Hook into the save function so we can store our metadata.
-		add_action( 'save_post', array( $this, 'save_primary_category_data' ), 10 );
+		// AJAX request to update post_meta based on selection of Primary Category.
+		add_action( 'wp_ajax_pwwp_pc_save_primary_category', array( $this, 'save_primary_category_metadata' ), 10 );
 	}
 
 	public function output_primary_category_admin_script( $hook ) {
@@ -27,18 +27,59 @@ class pwwp_primary_category_metabox_modifications {
 		if ( 'post-new.php' === $hook || 'post.php' === $hook ) {
 			wp_enqueue_script( 'pwwp-pc-functions', PRIMARY_CATEGORY_PLUGIN_URL . 'js/primary-category-functions.js', array( 'jquery' ) );
 			$post_id = $post->ID;
+			$current_primary_category = self::get_primary_category( $post_id );
+			if( ! $current_primary_category ){
+				// when it's set it to js empty string (2 single quotes).
+				$current_primary_category = "''";
+			}
 			wp_add_inline_script( 'pwwp-pc-functions', '
 //<![CDATA[
 	var pwwp_pc_data;
-	pwwp_pc_data = { post_ID: ' . $post_id . ' };
+	pwwp_pc_data = {
+		post_ID: ' . $post_id . ',
+		primary_category: ' . $current_primary_category . '
+	};
 //]]>' );
 		}
 
 	}
 
-	public function save_primary_category_data() {
-		error_log( 'inside save function', 0 );
-		error_log( print_r( $_POST, true ), 0 );
+	public static function get_primary_category( $id = 0, $echo = false ) {
+		// default return value will be false to indicate failure.
+		$value = false;
+		if ( (int)$id > 0 ) {
+			// since we have a non zero id check if there is a metadata item to use.
+			$value = get_post_meta( $id, 'pwwp_pc_primary_category', true );
+			error_log( print_r( $value, true ), 0 );
+		}
+		if( false !== $echo ){
+			echo $value;
+		} else {
+			return $value;
+		}
+	}
+
+	public function save_primary_category_metadata() {
+			// TODO: sanitize!!!
+			//$whatever = $_POST['pwwp_pc_primary_category'];
+			//$whatever = $_POST['action'];
+			$id = $_POST['ID'];
+			$whatever = $_POST['category'];
+			$result = update_post_meta( $id, 'pwwp_pc_selected', $whatever );
+			if ( $result ){
+				// this is a successful update.
+				if ( true === $result ) {
+					// this was an update.
+					echo 'value updated.';
+				} else {
+					// this was a new key.
+					echo 'new key: ' . $result;
+				}
+			} else {
+				echo 'fail';
+			}
+
+		wp_die();
 
 	}
 }
