@@ -28,10 +28,10 @@ class pwwp_primary_category_metabox_modifications {
 			wp_enqueue_script( 'pwwp-pc-functions', PRIMARY_CATEGORY_PLUGIN_URL . 'js/primary-category-functions.js', array( 'jquery' ) );
 			$post_id = $post->ID;
 			$current_primary_category = self::get_primary_category( $post_id );
-			if( ! $current_primary_category ){
-				// when it's set it to js empty string (2 single quotes).
-				$current_primary_category = "''";
-			}
+			// wrap with single quotes.
+			// when it's empty set it to just empty string (2 single quotes).
+			$current_primary_category = "'" . esc_js( $current_primary_category ) . "'";
+			// inline a script containing some data we'll want easy access to in edit screens.
 			wp_add_inline_script( 'pwwp-pc-functions', '
 //<![CDATA[
 	var pwwp_pc_data;
@@ -49,7 +49,7 @@ class pwwp_primary_category_metabox_modifications {
 		$value = false;
 		if ( (int)$id > 0 ) {
 			// since we have a non zero id check if there is a metadata item to use.
-			$value = get_post_meta( $id, 'pwwp_pc_primary_category', true );
+			$value = get_post_meta( $id, 'pwwp_pc_selected', true );
 			error_log( print_r( $value, true ), 0 );
 		}
 		if( false !== $echo ){
