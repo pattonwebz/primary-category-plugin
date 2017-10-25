@@ -15,6 +15,8 @@ class pwwp_primary_category_metabox_modifications {
 	public function __construct() {
 		// Output the script in the post edit and new post pages or admin.
 		add_action( 'admin_enqueue_scripts', array( $this, 'output_primary_category_admin_script' ), 10 );
+		// Hook into the save function so we can store our metadata.
+		add_action( 'save_post', array( $this, 'save_primary_category_data' ), 10 );
 	}
 
 	public function output_primary_category_admin_script( $hook ) {
@@ -31,6 +33,12 @@ class pwwp_primary_category_metabox_modifications {
 	pwwp_pc_data = { post_ID: ' . $post_id . ' };
 //]]>' );
 		}
+
+	}
+
+	public function save_primary_category_data() {
+		error_log( 'inside save function', 0 );
+		error_log( print_r( $_POST, true ), 0 );
 
 	}
 }
