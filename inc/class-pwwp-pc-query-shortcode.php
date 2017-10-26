@@ -98,14 +98,6 @@ if( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 				}
 			}// End if().
 
-
-/**
- * CODE BLOCK FOR DEBUG
- */
-error_log( print_r( get_term_meta( 1, '_pwwp_pc_selected_id', false ), true ), 0 );
-error_log( print_r( get_term_meta( 2, '_pwwp_pc_selected_id', false ), true ), 0 );
-error_log( print_r( get_term_meta( 3, '_pwwp_pc_selected_id', false ), true ), 0 );
-
 			// return the html.
 			return $html;
 		}
