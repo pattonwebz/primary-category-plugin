@@ -16,6 +16,7 @@ class pwwp_pc_query_shortcode {
 		if( '' === $atts['id'] && '' === $atts['slug'] && '' === $atts['name'] ){
 			// return noting... except an inline html comment
 			return '<!-- no id, slug or name passed to shortcode -->';
+			
 		} else {
 			// here we have either an id, a slug or a name.
 			if ( '' !== $atts['id'] ) {
@@ -45,11 +46,12 @@ class pwwp_pc_query_shortcode {
 				'posts_per_page'	=> $atts['limit'],
 				'post__not_in'		=> $sticky_posts,
 			);
+
+			// merge the $args array with the generated meta_key and meta_value args
 			$args = array_merge( $args, $tax_query_field );
-			error_log( print_r( $args, true ), 0 );
+
 			// The Query
 			$query = new WP_Query( $args );
-			error_log( print_r( $query, true ), 0 );
 
 			// start the loop
 			if ( $query->have_posts() ) {

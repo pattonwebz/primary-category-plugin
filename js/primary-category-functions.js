@@ -48,7 +48,6 @@ function pwwp_pc_bootstrap2() {
 	taxArray = pwwp_pc_get_taxonomies_on_page();
 	if( taxArray.prototype.toString.call( someVar ) === '[object Array]' && taxArray.length > 0 ) {
 		taxArray.forEach( function( element ){
-    		console.log( element );
 			pwwp_pc_init_box_for_taxonomy( element );
 		});
 	}
@@ -215,7 +214,6 @@ function pwwp_pc_bind_on_button_make_primary() {
 function pwwp_pc_reset_all_buttons() {
 	// loop through all of the added buttons.
 	jQuery(".pwwp-pc-primary").each( function( index ) {
-		console.log( 'reset' + index );
 		// remove the class indicating a button is active.
 		jQuery( this ).removeClass( 'pwwp-pc-cat')
 		// remove any classes indicating that an item is selected.

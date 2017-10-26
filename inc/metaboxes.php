@@ -55,7 +55,6 @@ class pwwp_primary_category_metabox_modifications {
 		if ( (int)$id > 0 ) {
 			// since we have a non zero id check if there is a metadata item to use.
 			$value = get_post_meta( $id, '_pwwp_pc_selected', true );
-			error_log( print_r( $value, true ), 0 );
 		}
 		if( false !== $echo ){
 			echo $value;
