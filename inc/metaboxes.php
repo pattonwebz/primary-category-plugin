@@ -70,21 +70,17 @@ class pwwp_primary_category_metabox_modifications {
 		$term_nicename = $_POST['category'];
 
 		$old_term_id = $_POST['old_term_id'];
-		error_log( 'fresh start with this post_id: ' . $post_id, 0 );
-		error_log( $old_term_id, 0 );
+
 		// if we have an old term id remove this post from the term meta.
 		if( $old_term_id ){
 			$old_meta = get_term_meta( $old_term_id, '_pwwp_pc_selected_id', true);
-			error_log( 'old_meta',0 );
-			error_log( print_r( $old_meta, true), 0 );
+
 			// find the key of any match for this $post_id.
 			if ( ( $key = array_search( $post_id, $old_meta ) ) !== false ) {
-				error_log( 'found in old_meta',0 );
 				// if we got a match unset it from the array.
     			unset($old_meta[$key]);
 				// update old terms metadata to remove this post id.
 				$r_old = update_term_meta( $old_term_id, '_pwwp_pc_selected_id', $old_meta );
-				error_log( print_r( get_term_meta( $old_term_id, '_pwwp_pc_selected_id', true), true ), 0);
 			}
 		}
 
@@ -115,10 +111,7 @@ class pwwp_primary_category_metabox_modifications {
 				echo 'fail';
 			}
 		}
-		error_log( 'old term meta', 0);
-		error_log( print_r( get_term_meta( $old_term_id, '_pwwp_pc_selected_id', true), true ), 0);
-		error_log( 'new term meta', 0);
-		error_log( print_r( get_term_meta( $term_id, '_pwwp_pc_selected_id', true), true ), 0);
+
 		// wp_die() triggers the return of the response.
 		wp_die();
 
