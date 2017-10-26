@@ -13,7 +13,7 @@ if( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 	/**
 	 * PWWP_PC_Query_Shortcode
 	 */
-	class PWWP_PC_Query_Shortcodee {
+	class PWWP_PC_Query_Shortcode {
 
 		/**
 		 * Constructor function for the class where we register a shortcode.
@@ -27,7 +27,7 @@ if( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 		 *
 		 * Function for the shortcode to perform a query for specific posts and
 		 * output a list of post titles.
-		 * 
+		 *
 		 * @param  array $atts attributes set in the shorcode.
 		 */
 		public function primary_category_query_shortcode( $atts ) {
