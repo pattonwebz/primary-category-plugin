@@ -13,10 +13,9 @@ class pwwp_pc_query_shortcode {
 			'limit' => '10',
 		), $atts, 'primary_category_query' );
 		// if we have neither an ID, a slug or a name then we should return nothing...
-		if( '' === $atts['id'] && '' === $atts['slug'] && '' === $atts['name'] ){
+		if ( '' === $atts['id'] && '' === $atts['slug'] && '' === $atts['name'] ) {
 			// return noting... except an inline html comment
 			return '<!-- no id, slug or name passed to shortcode -->';
-			
 		} else {
 			// here we have either an id, a slug or a name.
 			if ( '' !== $atts['id'] ) {
@@ -66,7 +65,7 @@ class pwwp_pc_query_shortcode {
 			} else {
 				// no posts found
 			}
-		}
+		}// End if().
 
 	}
 }

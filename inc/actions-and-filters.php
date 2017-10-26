@@ -10,6 +10,7 @@
 
 /**
  * Filters args used in the primary category custom widget.
+ *
  * @param  array $args array of args used when building category lists.
  * @return array updates args array with a meta_key value.
  */
