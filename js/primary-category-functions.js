@@ -95,7 +95,7 @@ function pwwp_pc_toggle_button_in_label( element = false, toAdd = true ) {
 		 */
 		if( true === toAdd ) {
 			// fund the correct place beside the chosen element and append some markup.
-			jQuery( element ).parent().after( '<label><input type="button" class="pwwp-pc-primary button button-primary" value="Make Primary"><span class="screen-reader-text">Make Primary</span></label>' );
+			jQuery( element ).parent().after( '<label><input type="button" class="pwwp-pc-primary button button-small button-primary" value="Make Primary" style="margin-left: 10px !important; float: right;"><span class="screen-reader-text">Make Primary</span></label>' );
 			//  mark one of te wrappers to indicate checked
 			jQuery( element ).parent().parent().addClass( 'pwwp-pc-checked' );
 			// ensure a click event is bound to any newly added buttons.

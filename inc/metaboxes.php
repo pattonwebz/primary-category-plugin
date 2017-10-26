@@ -43,7 +43,9 @@ class pwwp_primary_category_metabox_modifications {
 		primary_category: "' . esc_js( $current_primary_category ) . '",
 		primary_category_id: "' . $current_primary_category_id . '",
 	};
-//]]>' );
+//]]>'
+			);
+			
 		}
 
 	}
@@ -116,7 +118,7 @@ class pwwp_primary_category_metabox_modifications {
 		}
 		echo esc_html( $response );
 		*/
-	
+
 		// wp_die() triggers the return of the response.
 		wp_die();
 
