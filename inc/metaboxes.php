@@ -5,6 +5,8 @@
   * Adds and modifies metaboxes on the post editor to enable tagging of specific
   * categories as 'primary' category for that post.
   *
+  * Exposes 1 staticly accessible function: get_primary_category( $post_id );
+  *
   * @package  Primary Category Plugin
   */
 
@@ -28,16 +30,17 @@ class pwwp_primary_category_metabox_modifications {
 			wp_enqueue_script( 'pwwp-pc-functions', PRIMARY_CATEGORY_PLUGIN_URL . 'js/primary-category-functions.js', array( 'jquery' ) );
 			$post_id = $post->ID;
 			$current_primary_category = self::get_primary_category( $post_id );
+			$current_primary_category_id = get_post_meta( $post_id, 'pwwp_pc_selected_id', true );
 			// wrap with single quotes.
-			// when it's empty set it to just empty string (2 single quotes).
-			$current_primary_category = "'" . esc_js( $current_primary_category ) . "'";
+
 			// inline a script containing some data we'll want easy access to in edit screens.
 			wp_add_inline_script( 'pwwp-pc-functions', '
 //<![CDATA[
 	var pwwp_pc_data;
 	pwwp_pc_data = {
 		post_ID: ' . $post_id . ',
-		primary_category: ' . $current_primary_category . '
+		primary_category: "' . esc_js( $current_primary_category ) . '",
+		primary_category_id: ' . $current_primary_category_id . ',
 	};
 //]]>' );
 		}
@@ -60,12 +63,24 @@ class pwwp_primary_category_metabox_modifications {
 	}
 
 	public function save_primary_category_metadata() {
-			// TODO: sanitize!!!
-			//$whatever = $_POST['pwwp_pc_primary_category'];
-			//$whatever = $_POST['action'];
-			$id = $_POST['ID'];
-			$whatever = $_POST['category'];
-			$result = update_post_meta( $id, 'pwwp_pc_selected', $whatever );
+		// TODO: sanitize!!!
+		//$whatever = $_POST['pwwp_pc_primary_category'];
+		//$whatever = $_POST['action'];
+		$post_id = $_POST['ID'];
+		$term_nicename = $_POST['category'];
+
+		$term = get_term_by( 'name', $term_nicename, 'category' );
+		// if $term is an object and not an error...
+		if( ! is_wp_error( $term ) ){
+			$term_id = $term->term_id;
+			$term_slug = $term->slug;
+		}
+		$results['id'] = update_post_meta( $post_id, 'pwwp_pc_selected_id', $term_id );
+		$results['slug'] = update_post_meta( $post_id, 'pwwp_pc_selected_slug', $term_slug );
+		$results['nicename'] = update_post_meta( $post_id, 'pwwp_pc_selected', $term_nicename );
+
+		// loop through the results to generate a response.
+		foreach ( $results as $result ){
 			if ( $result ){
 				// this is a successful update.
 				if ( true === $result ) {
@@ -78,7 +93,10 @@ class pwwp_primary_category_metabox_modifications {
 			} else {
 				echo 'fail';
 			}
+		}
 
+
+		// wp_die() triggers the return of the response.
 		wp_die();
 
 	}
