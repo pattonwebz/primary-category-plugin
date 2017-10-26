@@ -36,11 +36,14 @@ class pwwp_pc_query_shortcode {
 			}
 
 			// WP_Query arguments
+			$sticky_posts = get_option( 'sticky_posts' );
+
 			$args = array(
 				'post_type'			=> array( $atts['post_type'] ),
 				'post_status'		=> array( 'published' ),
 				'nopaging'			=> true,
 				'posts_per_page'	=> $atts['limit'],
+				'post__not_in'		=> $sticky_posts,
 			);
 			$args = array_merge( $args, $tax_query_field );
 			error_log( print_r( $args, true ), 0 );
@@ -48,6 +51,19 @@ class pwwp_pc_query_shortcode {
 			$query = new WP_Query( $args );
 			error_log( print_r( $query, true ), 0 );
 
+			// start the loop
+			if ( $query->have_posts() ) {
+				echo '<ul>';
+				while ( $query->have_posts() ) {
+					$query->the_post();
+					echo '<li><a href="' . esc_url( get_the_permalink() ) . '">' . esc_html( get_the_title() ) . '</a></li>';
+				}
+				echo '</ul>';
+				/* Restore original Post Data */
+				wp_reset_postdata();
+			} else {
+				// no posts found
+			}
 		}
 
 	}
