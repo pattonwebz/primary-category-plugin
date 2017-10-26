@@ -182,8 +182,10 @@ function pwwp_make_ajax_request( category = '' ) {
 			// send the response and category to a function that will update if
 			// the request succeeded.
 			pwwp_pc_update_custom_metabox_on_success( response, category );
+		} else {
+			var response = 'The server did not respond.';
 		}
-		console.log('Got this from the server: ' + response);
+		console.log('Primary Category: Got this response from the server - ' + JSON.stringify( response ) );
 	});
 
 /**

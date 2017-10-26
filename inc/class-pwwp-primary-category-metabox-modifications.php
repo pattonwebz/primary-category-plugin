@@ -130,7 +130,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			// printing out the results isn't the best ou
 			$response = print_r( $results, true );
 			// loop through the results to generate a response.
-			echo $response;
+			wp_send_json_success( $response );
 
 			// TODO: Generate better response.
 			/*
