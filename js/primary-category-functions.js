@@ -39,11 +39,6 @@ function pwwp_pc_bootstrap() {
 			})
 		};
 	}
-	// if we have a category already to set as primary then do it...
-
-	// else we'll set the first one in the box as it.
-
-	//var parentid = jQuery( '#postcustom #postcustomstuff input[value="pwwp_pc_selected"]' ).parent().parent( 'tr' ).attr( 'id' );
 
 }
 
@@ -146,7 +141,7 @@ function pwwp_pc_update_custom_metabox_on_success( success = false, value ) {
 	// make sure we were passed a value that doesn't indicate failure.
 	if( false !== success ){
 		// get the #id of the wrapper that would contain our primary category meta value.
-		var parentid = jQuery( '#postcustom #postcustomstuff input[value="pwwp_pc_selected"]' ).parent().parent( 'tr' ).attr( 'id' );
+		var parentid = jQuery( '#postcustom #postcustomstuff input[value="_pwwp_pc_selected"]' ).parent().parent( 'tr' ).attr( 'id' );
 		if ( jQuery( parentid ).length > 0 ) {
 			// since we found the parent, grab the value from the textarea.
 			var val = jQuery( '#' + parentid ).find( '#' + parentid + '-value' ).val();
