@@ -163,10 +163,11 @@ function pwwp_make_ajax_request( category = '' ) {
 	if( pwwp_pc_data ){
 		// the global object we need data from exists so continue building object.
 		var data = {
-			'action': 'pwwp_pc_save_primary_category',
-			'ID': pwwp_pc_data.post_ID,
-			'category': category,
-			'old_term_id': pwwp_pc_data.primary_category_id,
+			'action'		: 'pwwp_pc_save_primary_category',
+			'nonce'			: pwwp_pc_data.nonce,
+			'ID'			: pwwp_pc_data.post_ID,
+			'category'		: category,
+			'old_term_id'	: pwwp_pc_data.primary_category_id,
 		};
 
 	}
