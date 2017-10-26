@@ -7,6 +7,15 @@
   * @package  Primary Category Plugin
   */
 
+function pwwp_pc_initiate(){
+	// add any buttons that should exist and set the correct one to selected.
+	pwwp_pc_bootstrap();
+	// sets up the inital checkbox change binds.
+	pwwp_pc_bind_on_checkbox_change();
+	// start the click event binds for our added buttons.
+	pwwp_pc_bind_on_button_make_primary();
+}
+
 /**
  * Function used to bootstrap and initate the primary category system.
  */
@@ -21,8 +30,9 @@ function pwwp_pc_bootstrap() {
 			pwwp_pc_toggle_button_in_label( this );
 		}
 	});
-	// if the global object we added has a category already set the button for
-	// it to selected.
+
+	// if the global object we added has a category already set then button for
+	// it should be set to selected.
 	if( pwwp_pc_data.primary_category_id ){
 		// get an item that might be checked,
 		var item_maybe_checked = jQuery( '#category-' + pwwp_pc_data.primary_category_id ).contents().find( ':checkbox:checked' );
@@ -33,50 +43,20 @@ function pwwp_pc_bootstrap() {
 			jQuery( '#category-' + pwwp_pc_data.primary_category_id + ' .pwwp-pc-primary' ).each( function() {
 				// set a better screen reader text to show it's selected.
 				jQuery( this ).parent().find( '.screen-reader-text' ).val( 'This Posts Primary Category' );
+				jQuery( this ).parent().addClass( 'pwwp-pc-cat-selected' );
 				// disable the button and set it's value to selected
 				jQuery( this ).prop( 'disabled', true );
 				jQuery( this ).val('Selected');
 			})
 		};
+	} else {
+		// if there is no primary already set then find all buttons and click
+		// the first one that is found.
+		var buttons = jQuery( '#category-' + pwwp_pc_data.primary_category_id + ' .pwwp-pc-primary' );
+		jQuery( buttons )[0].click();
 	}
 
 }
-
-function pwwp_pc_bootstrap2() {
-	pwwp_pc_check_first_loaded();
-	var taxArray;
-	taxArray = pwwp_pc_get_taxonomies_on_page();
-	if( taxArray.prototype.toString.call( someVar ) === '[object Array]' && taxArray.length > 0 ) {
-		taxArray.forEach( function( element ){
-			pwwp_pc_init_box_for_taxonomy( element );
-		});
-	}
-}
-
-function pwwp_pc_initiate(){
-	// add any buttons that should exist and set the correct one to selected.
-	pwwp_pc_bootstrap();
-	// sets up the inital checkbox change binds.
-	pwwp_pc_bind_on_checkbox_change();
-	// start the click event binds for our added buttons.
-	pwwp_pc_bind_on_button_make_primary();
-}
-
-/**
- * Check for all the functions that are present on the page and return them
- * in an array.
- * @return array array containing IDs matching the taxonomies on page.
- */
-function pwwp_pc_get_taxonomies_on_page() {
-	jQuery();
-}
-
-function pwwp_pc_init_box_for_taxonomy( taxonomyContainerID = false ) {
-	if ( taxonomyContainerID ) {
-		jQuery( taxonomyContainerID );
-	}
-}
-
 
 /**
  * Bind to the checkboxes beside categories in the category select box and
@@ -116,16 +96,21 @@ function pwwp_pc_toggle_button_in_label( element = false, toAdd = true ) {
 		if( true === toAdd ) {
 			// fund the correct place beside the chosen element and append some markup.
 			jQuery( element ).parent().after( '<label><input type="button" class="pwwp-pc-primary button button-primary" value="Make Primary"><span class="screen-reader-text">Make Primary</span></label>' );
+			//  mark one of te wrappers to indicate checked
+			jQuery( element ).parent().parent().addClass( 'pwwp-pc-checked' );
 			// ensure a click event is bound to any newly added buttons.
+			pwwp_pc_bind_off_button_make_primary();
 			pwwp_pc_bind_on_button_make_primary();
 		} else {
 			var container;
-			// fund the elements outter wrapper.
+			// find the elements outter wrapper.
 			container = jQuery( element ).parent().parent();
 			// find the item we want (a button to remove).
 			var item = jQuery( jQuery( container ).find( '.pwwp-pc-primary' ) );
 			// remove the button.
 			jQuery( jQuery(item).first() ).remove();
+			// remove the class from the container.
+			jQuery( container ).parent().parent().removeClass( 'pwwp-pc-checked' );
 		}
 	}
 }
@@ -206,16 +191,25 @@ function pwwp_pc_bind_on_button_make_primary() {
 	// on click trigger our hander.
 	jQuery(".pwwp-pc-primary").on('click', pwwp_pc_button_click_handler );
 }
+/**
+ * Function which unbinds our added buttons from our handler.
+ */
+function pwwp_pc_bind_off_button_make_primary() {
+	// unbind on click trigger our hander.
+	jQuery(".pwwp-pc-primary").off('click', pwwp_pc_button_click_handler );
+}
+
 
 /**
  * Resets all the buttons already in place to their default values. This is done
  * prior to updating the selected button based on the click event.
  */
 function pwwp_pc_reset_all_buttons() {
+	pwwp_pc_bind_off_button_make_primary();
 	// loop through all of the added buttons.
 	jQuery(".pwwp-pc-primary").each( function( index ) {
 		// remove the class indicating a button is active.
-		jQuery( this ).removeClass( 'pwwp-pc-cat')
+		jQuery( this ).parent().removeClass( 'pwwp-pc-cat-selected' )
 		// remove any classes indicating that an item is selected.
 		jQuery( this ).parent().parent().removeClass( 'pwwp-pc-checked' );
 		// Sent the screen reader text to it's defautl value.
@@ -225,6 +219,7 @@ function pwwp_pc_reset_all_buttons() {
 		// set the value of the button back to the default.
 		jQuery( this ).val('Make Primary');
 	});
+	pwwp_pc_bind_on_button_make_primary();
 }
 
 /**
@@ -234,15 +229,19 @@ function pwwp_pc_reset_all_buttons() {
 function pwwp_pc_button_click_handler( event ) {
 	// we're handling everything this button does, prevent default behaviors.
 	event.preventDefault();
+	// Preventing default halts the submit but clicking triggers our handler
+	// + issues a click = 2 times triggered. Need to stop propagation too.
+    event.stopImmediatePropagation();
+
 	// reset all the buttons to start with a clean slate.
 	pwwp_pc_reset_all_buttons();
 	// add a class indicating this item is selected as primary cat.
-	jQuery( this ).parent().addClass( 'pwwp-pc-cat')
+	jQuery( this ).parent().addClass( 'pwwp-pc-cat-selected')
 
 	/**
 	 * We chould always have the class this test for since we just added it above...
 	 */
-	if( jQuery( this).parent().hasClass( 'pwwp-pc-cat' ) ) {
+	if( jQuery( this ).parent().hasClass( 'pwwp-pc-cat-selected' ) ) {
 		// set a better screen reader text to show it's selected.
 		jQuery( this ).parent().find( '.screen-reader-text' ).val( 'This Posts Primary Category' );
 		// disable the button and set it's value to selected
