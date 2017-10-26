@@ -41,7 +41,7 @@ class pwwp_primary_category_metabox_modifications {
 	pwwp_pc_data = {
 		post_ID: ' . $post_id . ',
 		primary_category: "' . esc_js( $current_primary_category ) . '",
-		primary_category_id: ' . $current_primary_category_id . ',
+		primary_category_id: "' . $current_primary_category_id . '",
 	};
 //]]>' );
 		}
