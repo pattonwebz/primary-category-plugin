@@ -92,6 +92,11 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 		 * This is used to save some post meta, fired on AJAX request.
 		 */
 		public function save_primary_category_metadata() {
+			// first check nonce to ensure this is a post that we expect.
+			if( ! check_ajax_referer( 'pwwp-pc-functions', 'nonce' ) ) {
+				wp_send_json_error( 'Invalid security token sent.' );
+    			wp_die();
+			}
 			// TODO: sanitize!!!
 			$post_id = (int) $_POST['ID'];
 			$term_nicename = $_POST['category'];
