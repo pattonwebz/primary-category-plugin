@@ -93,22 +93,30 @@ class pwwp_primary_category_metabox_modifications {
 			$results['nicename'] = update_post_meta( $post_id, '_pwwp_pc_selected', $term_nicename );
 		}
 
+		// printing out the results isn't the best ou
+		$response = print_r( $results, true );
 		// loop through the results to generate a response.
+		echo $response;
+
+		// TODO: Generate better response.
+		/*
 		foreach ( $results as $result ) {
 			if ( $result ) {
 				// this is a successful update.
 				if ( true === $result ) {
 					// this was an update.
-					echo 'value updated.';
+					$response .= 'value updated.';
 				} else {
 					// this was a new key.
-					echo 'new key: ' . $result;
+					$response .= 'new key: ' . $result;
 				}
 			} else {
-				echo 'fail';
+				$response .= 'fail';
 			}
 		}
-
+		echo esc_html( $response );
+		*/
+	
 		// wp_die() triggers the return of the response.
 		wp_die();
 
