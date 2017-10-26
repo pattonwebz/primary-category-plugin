@@ -35,3 +35,4 @@ if ( ! defined( 'PRIMARY_CATEGORY_PLUGIN_VERSION' ) ) {
 include( PRIMARY_CATEGORY_PLUGIN_DIR . 'inc/metaboxes.php' ); // adds and modifies metaboxes that are output in post editor.
 include( PRIMARY_CATEGORY_PLUGIN_DIR . 'inc/actions-and-filters.php' ); // any actions and filters exposed by the theme.
 include( PRIMARY_CATEGORY_PLUGIN_DIR . 'inc/class-pwwp-widget-primary-categories.php' ); // class to build a category widget that shows only primary categories. Based on the core categories widget.
+include( PRIMARY_CATEGORY_PLUGIN_DIR . 'inc/class-pwwp-pc-query-shortcode.php' );
