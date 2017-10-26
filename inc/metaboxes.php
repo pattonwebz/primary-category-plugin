@@ -71,12 +71,12 @@ class pwwp_primary_category_metabox_modifications {
 
 		// if we have an old term id remove this post from the term meta.
 		if ( $old_term_id ) {
-			$old_meta = get_term_meta( $old_term_id, '_pwwp_pc_selected_id', true );
+			$old_meta = get_term_meta( $old_term_id, '_pwwp_pc_selected_id' );
 
 			// find the key of any match for this $post_id.
 			if ( ( $key = array_search( $post_id, $old_meta ) ) !== false ) {
 				// if we got a match unset it from the array.
-				unset( $old_meta[ $key ] );
+				unset( $old_meta[$key] );
 				// update old terms metadata to remove this post id.
 				$r_old = update_term_meta( $old_term_id, '_pwwp_pc_selected_id', $old_meta );
 			}
