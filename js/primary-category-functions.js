@@ -53,7 +53,9 @@ function pwwp_pc_bootstrap() {
 		// if there is no primary already set then find all buttons and click
 		// the first one that is found.
 		var buttons = jQuery( '#category-' + pwwp_pc_data.primary_category_id + ' .pwwp-pc-primary' );
-		jQuery( buttons )[0].click();
+		if( typeof jQuery( buttons )[0] !== "undefined" && jQuery( buttons )[0].length > 0 ) {
+			jQuery( buttons )[0].click();
+		}
 	}
 
 }
