@@ -55,12 +55,15 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				// get the id of the current primary category.
 				$current_primary_category_id = get_post_meta( $post_id, '_pwwp_pc_selected_id', true );
 
+				//wp_localize_script( 'pwwp-pc-functions' );
+
 				// inline a script containing some data we'll want easy access
 				// to in edit screens and in our plugins JS functions.
 				wp_add_inline_script( 'pwwp-pc-functions', '
 	//<![CDATA[
 		var pwwp_pc_data;
 		pwwp_pc_data = {
+			nonce: "' . wp_create_nonce( 'pwwp-pc-functions' ) . '",
 			post_ID: ' . $post_id . ',
 			primary_category: "' . esc_js( $current_primary_category ) . '",
 			primary_category_id: "' . $current_primary_category_id . '",
@@ -73,7 +76,8 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 		}
 
 		/**
-		 * get_primary_category description
+		 * Get the current primary category for whatever post ID is passed.
+		 *
 		 * @param  integer $id   id of post to get primary category of.
 		 * @param  boolean $echo either echo or not.
 		 * @return string        a string containing a category nicename.
