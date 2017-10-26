@@ -35,18 +35,28 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			add_action( 'save_post', array( $this, 'save_term_metadata' ) );
 		}
 
+		/**
+		 * output_primary_category_admin_script
+		 *
+		 * @param  string $hook text name for the hook currently running.
+		 */
 		public function output_primary_category_admin_script( $hook ) {
 			// get some variables we'll use in the script.#
 			global $post;
 
-			// if on post-new or post pages then enqueue our scripts.
+			// if on 'post-new' or 'post' pages then enqueue our scripts.
 			if ( 'post-new.php' === $hook || 'post.php' === $hook ) {
+				// add the main script to edit page.
 				wp_enqueue_script( 'pwwp-pc-functions', PRIMARY_CATEGORY_PLUGIN_URL . 'js/primary-category-functions.js', array( 'jquery' ) );
+
 				$post_id = $post->ID;
+				// get the current primary category.
 				$current_primary_category = self::get_primary_category( $post_id );
+				// get the id of the current primary category.
 				$current_primary_category_id = get_post_meta( $post_id, '_pwwp_pc_selected_id', true );
-				// wrap with single quotes.
-				// inline a script containing some data we'll want easy access to in edit screens.
+
+				// inline a script containing some data we'll want easy access
+				// to in edit screens and in our plugins JS functions.
 				wp_add_inline_script( 'pwwp-pc-functions', '
 	//<![CDATA[
 		var pwwp_pc_data;
@@ -62,6 +72,12 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
 		}
 
+		/**
+		 * get_primary_category description
+		 * @param  integer $id   id of post to get primary category of.
+		 * @param  boolean $echo either echo or not.
+		 * @return string        a string containing a category nicename.
+		 */
 		public static function get_primary_category( $id = 0, $echo = false ) {
 			// default return value will be false to indicate failure.
 			$value = false;
@@ -76,6 +92,9 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			}
 		}
 
+		/**
+		 * This is used to save some post meta, fired on AJAX request.
+		 */
 		public function save_primary_category_metadata() {
 			// TODO: sanitize!!!
 			$post_id = (int) $_POST['ID'];
@@ -136,6 +155,9 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
 		}
 
+		/**
+		 * This is sued to save some term meta, fired on 'save_post' hook.
+		 */
 		public function save_term_metadata( $post_id ) {
 			$term_id = get_post_meta( $post_id, '_pwwp_pc_selected_id', true );
 			if ( $term_id ) {
@@ -154,4 +176,5 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
 } // End if().
 
-$pwwp_pc_metabox = new pwwp_primary_category_metabox_modifications;
+// instantiate the class.
+$pwwp_pc_metabox = new PWWP_Primary_Category_Metabox_Modifications;
