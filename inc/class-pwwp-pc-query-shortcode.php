@@ -43,6 +43,8 @@ if( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 				// return noting... except an inline html comment
 				return '<!-- no id, slug or name passed to shortcode -->';
 			} else {
+				// start empty var as a default return.
+				$html = '';
 				// here we have either an id, a slug or a name.
 				if ( '' !== $atts['id'] ) {
 					$tax_query_field = array(
@@ -80,12 +82,15 @@ if( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 
 				// start the loop
 				if ( $query->have_posts() ) {
+					ob_start();
 					echo '<ul>';
 					while ( $query->have_posts() ) {
 						$query->the_post();
 						echo '<li><a href="' . esc_url( get_the_permalink() ) . '">' . esc_html( get_the_title() ) . '</a></li>';
 					}
 					echo '</ul>';
+					$html = ob_get_clean();
+
 					/* Restore original Post Data */
 					wp_reset_postdata();
 				} else {
@@ -93,6 +98,16 @@ if( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 				}
 			}// End if().
 
+
+/**
+ * CODE BLOCK FOR DEBUG
+ */
+error_log( print_r( get_term_meta( 1, '_pwwp_pc_selected_id', false ), true ), 0 );
+error_log( print_r( get_term_meta( 2, '_pwwp_pc_selected_id', false ), true ), 0 );
+error_log( print_r( get_term_meta( 3, '_pwwp_pc_selected_id', false ), true ), 0 );
+
+			// return the html.
+			return $html;
 		}
 	}
 

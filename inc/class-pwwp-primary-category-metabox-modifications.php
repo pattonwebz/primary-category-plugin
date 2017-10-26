@@ -32,7 +32,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			// AJAX request to update post_meta based on selection of Primary Category.
 			add_action( 'wp_ajax_pwwp_pc_save_primary_category', array( $this, 'save_primary_category_metadata' ), 10 );
 			// on post save we want to update some term meta
-			add_action( 'save_post', array( $this, 'save_term_metadata' ) );
+			//add_action( 'save_post', array( $this, 'save_term_metadata' ) );
 		}
 
 		/**
@@ -101,36 +101,93 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			$post_id = (int) $_POST['ID'];
 			$term_nicename = $_POST['category'];
 
-			$old_term_id = $_POST['old_term_id'];
+			/**
+			 * Before any setting of items, lets do some unsetting of term meta.
+			 */
+			// get any already set value for primary category id on this post.
+			$old_term_id = get_post_meta( $post_id, '_pwwp_pc_selected_id', true );
 
 			// if we have an old term id remove this post from the term meta.
 			if ( $old_term_id ) {
-				$old_meta = get_term_meta( $old_term_id, '_pwwp_pc_selected_id' );
+				error_log( 'old term', 0 );
+				error_log( print_r( $old_term_id, true ), 0 );
+				// get the meta for our key, false = we want the array.
+				$old_meta = get_term_meta( $old_term_id, '_pwwp_pc_selected_id'. false );
+				error_log( 'old meta got', 0 );
+				error_log( print_r( $old_meta, true ), 0 );
+				if ( $old_meta ){
+					error_log( 'old meta in', 0 );
+					if( is_array( $old_meta ) ){
+						// find the key of any match for this $post_id.
+						error_log( 'is array', 0 );
+						if ( ( $key = array_search( $post_id, $old_meta ) ) !== false ) {
+							error_log( 'got key', 0 );
+							error_log( print_r( $old_meta[$key], true ), 0 );
 
-				// find the key of any match for this $post_id.
-				if ( ( $key = array_search( $post_id, $old_meta ) ) !== false ) {
-					// if we got a match unset it from the array.
-					unset( $old_meta[$key] );
-					// update old terms metadata to remove this post id.
-					$r_old = update_term_meta( $old_term_id, '_pwwp_pc_selected_id', $old_meta );
+							if( count( $old_meta ) > 1 ) {
+								// if we got a match unset it from the array.
+								unset( $old_meta[$key] );
+								// update old terms metadata to remove this post id.
+								$r_old = update_term_meta( $old_term_id, '_pwwp_pc_selected_id', $old_meta );
+								error_log( 'r old 1', 0 );
+								error_log( print_r( $r_old, true ), 0 );
+							} else {
+								$r_old = delete_term_meta( $old_term_id, '_pwwp_pc_selected_id' );
+								error_log( 'r old 2', 0 );
+								error_log( print_r( $r_old, true ), 0 );
+							}
+
+						} else {
+							error_log( 'else', 0 );
+							if( (int)$post_id === (int)$old_meta ){
+								// update with an empty string
+								$r_old = delete_term_meta( $old_term_id, '_pwwp_pc_selected_id' );
+								error_log( 'deleted', 0 );
+								error_log( print_r( $r_old, true ), 0 );
+							}
+						}
+					}
+
 				}
+
 			}
 
+			/**
+			 * Now update the meta values for the key.
+			 */
 			$term = get_term_by( 'name', $term_nicename, 'category' );
-			// if $term is not an error...
-			if ( ! is_wp_error( $term ) ) {
+			// if $term is object not an error...
+			if ( is_object( $term ) && ! is_wp_error( $term ) ) {
 				$term_id = $term->term_id;
 				$term_slug = $term->slug;
 				// update the post meta with these items.
 				$results['id'] = update_post_meta( $post_id, '_pwwp_pc_selected_id', $term_id );
 				$results['slug'] = update_post_meta( $post_id, '_pwwp_pc_selected_slug', $term_slug );
 				$results['nicename'] = update_post_meta( $post_id, '_pwwp_pc_selected', $term_nicename );
+				// set this value early as a default incase it fails.
+				$results['term_meta'] = false;
+				$new_term_meta = get_term_meta( $old_term_id, '_pwwp_pc_selected_id'. false );
+				if ( is_array( $new_term_meta ) ) {
+					// since this is an array check if this post id is already in it.
+					if ( false === ( $key = array_search( $post_id, $new_term_meta ) ) ) {
+						// we're not in the array already, add us
+						$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', array_push( $new_term_meta, $post_id ) );
+					}
+				} else {
+					// isn't an array already, set it as one and post id add to term meta.
+					$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', array( $post_id ) );
+				}
+
 			}
 
 			// printing out the results isn't the best ou
-			$response = print_r( $results, true );
-			// loop through the results to generate a response.
-			wp_send_json_success( $response );
+			if( $results ){
+				$response = print_r( $results, true );
+				// loop through the results to generate a response.
+				wp_send_json_success( $response );
+				wp_die();
+			}
+
 
 			// TODO: Generate better response.
 			/*
