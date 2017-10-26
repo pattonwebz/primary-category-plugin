@@ -24,10 +24,6 @@ if ( ! defined( 'PRIMARY_CATEGORY_PLUGIN_URL' ) ) {
 	define( 'PRIMARY_CATEGORY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 
-if ( ! defined( 'PRIMARY_CATEGORY_PLUGIN_VERSION' ) ) {
-	define( 'PRIMARY_CATEGORY_PLUGIN_VERSION', '1.0.0' );
-}
-
 /** -------------------------------- *
  * includes
  * ---------------------------------- */
