@@ -179,7 +179,8 @@ function pwwp_make_ajax_request( category = '' ) {
 		var data = {
 			'action': 'pwwp_pc_save_primary_category',
 			'ID': pwwp_pc_data.post_ID,
-			'category': category
+			'category': category,
+			'old_category_id': pwwp_pc_data.primary_category_id,
 		};
 
 	}
