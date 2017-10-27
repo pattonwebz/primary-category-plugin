@@ -19,6 +19,8 @@ It also offers a widget for showing categories containing primary tags and a sho
 Shortcode accepts 5 possible parameters: `id`, `slug`, `name`, `post_type` and `limit`. All are option - but you must pass at least 1 of `id`, `slug` or `name`. Preference is given to each in that order respectively. Defaults are for `post` for post_type and limit of `10`.
 
 `[primary_category_query id="1" slug="slug" name="nicename" post_type="post" limit="10"]`
+
+NOTE: Once a primary category is set for a post it should always have a primary set...
 == Installation ==
 
 1. Upload `primary-category-plugin` to the `/wp-content/plugins/` directory
@@ -32,4 +34,4 @@ Shortcode accepts 5 possible parameters: `id`, `slug`, `name`, `post_type` and `
 == Upgrade Notice ==
 
 = 1.0.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
+Initial release
