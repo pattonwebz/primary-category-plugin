@@ -8,7 +8,7 @@
   * @package  Primary Category Plugin
   */
 
-if( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
+if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 
 	/**
 	 * PWWP_PC_Query_Shortcode

@@ -32,7 +32,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			// AJAX request to update post_meta based on selection of Primary Category.
 			add_action( 'wp_ajax_pwwp_pc_save_primary_category', array( $this, 'save_primary_category_metadata' ), 10 );
 			// on post save we want to update some term meta
-			//add_action( 'save_post', array( $this, 'save_term_metadata' ) );
+			// add_action( 'save_post', array( $this, 'save_term_metadata' ) );
 		}
 
 		/**
@@ -56,11 +56,11 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				$current_primary_category_id = get_post_meta( $post_id, '_pwwp_pc_selected_id', true );
 
 				wp_localize_script( 'pwwp-pc-functions', 'pwwp_pc_data', [
-    				'ajax_url'				=> admin_url( 'admin-ajax.php' ),
-    				'nonce' 				=> wp_create_nonce( 'pwwp-pc-functions' ),
+					'ajax_url'				=> admin_url( 'admin-ajax.php' ),
+					'nonce' 				=> wp_create_nonce( 'pwwp-pc-functions' ),
 					'post_id'				=> $post_id,
 					'primary_category' 		=> esc_js( $current_primary_category ),
-					'primary_category_id' 	=> (int)$current_primary_category_id,
+					'primary_category_id' 	=> (int) $current_primary_category_id,
 				]);
 
 			}
@@ -93,9 +93,9 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 		 */
 		public function save_primary_category_metadata() {
 			// first check nonce to ensure this is a post that we expect.
-			if( ! check_ajax_referer( 'pwwp-pc-functions', 'nonce' ) ) {
+			if ( ! check_ajax_referer( 'pwwp-pc-functions', 'nonce' ) ) {
 				wp_send_json_error( 'Invalid security token sent.' );
-    			wp_die();
+				wp_die();
 			}
 			// TODO: sanitize!!!
 			$post_id = (int) $_POST['ID'];
@@ -112,7 +112,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			$results = self::update_new_meta( $post_id, $term_nicename );
 
 			// printing out the results isn't the best...
-			if( $results ){
+			if ( $results ) {
 				$response = print_r( $results, true );
 				// loop through the results to generate a response.
 				wp_send_json_success( $response );
@@ -149,38 +149,32 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				// get the meta for our key, false = we want the array.
 				$old_meta = get_term_meta( $old_term_id, '_pwwp_pc_selected_id', true );
 				if ( $old_meta && count( $old_meta ) > 0 ) {
-					if( is_array( $old_meta ) ){
+					if ( is_array( $old_meta ) ) {
 						// find the key of any match for this $post_id.
 						if ( ( $keys = array_search( $post_id, $old_meta ) ) !== false ) {
 
-							if( count( $old_meta ) > 1 ) {
+							if ( count( $old_meta ) > 1 ) {
 								// if we got a match unset it from the array.
 								foreach ( $keys as $key1 => $key2 ) {
-									if( $key2 ){
-										unset( $old_meta[$key1][$key2] );
+									if ( $key2 ) {
+										unset( $old_meta[ $key1 ][ $key2 ] );
 									} else {
-										unset( $old_meta[$key1] );
+										unset( $old_meta[ $key1 ] );
 									}
-
 								}
 								// update old terms metadata to remove this post id.
 								$r_old = update_term_meta( $old_term_id, '_pwwp_pc_selected_id', $old_meta );
 							} else {
 								$r_old = delete_term_meta( $old_term_id, '_pwwp_pc_selected_id' );
 							}
-
 						} else {
-							if( $post_id === $old_meta ){
+							if ( $post_id === $old_meta ) {
 								// delete
 								$r_old = delete_term_meta( $old_term_id, '_pwwp_pc_selected_id' );
 							}
-
 						}
-
 					}
-
 				}
-
 			}
 
 		}
@@ -188,7 +182,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 		private static function update_new_meta( $post_id = 0, $term_nicename = 0 ) {
 
 			$results = false;
-			if ( $term_nicename && $post_id ){
+			if ( $term_nicename && $post_id ) {
 
 				/**
 				 * Now update the meta values for the key.
@@ -216,19 +210,16 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 					} else {
 						// isn't an array
 						// if not an exact match then update...
-						if( (int)$post_id === (int)$new_term_meta ){
+						if ( (int) $post_id === (int) $new_term_meta ) {
 							// we probably do nothing here
 						} else {
 							$update_term_meta = array( $post_id );
 							delete_term_meta( $term_id, '_pwwp_pc_selected_id' );
 							$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', $update_term_meta );
 						}
-
 					}
-
 				}
-
-			}
+			}// End if().
 
 			return $results;
 

@@ -9,7 +9,7 @@
   * @package  Primary Category Plugin
   */
 
-if( ! class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
+if ( ! class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
 
 	/**
 	 * PWWP_Widget_Primary_Categories class.
@@ -167,7 +167,7 @@ if( ! class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
 
 	}
 
-}
+}// End if().
 
 /**
  * Function to register our new widget through add_action call.

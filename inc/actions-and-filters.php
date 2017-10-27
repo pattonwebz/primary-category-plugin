@@ -29,25 +29,26 @@ add_filter( 'pwwp_widget_primary_categories_args', 'pwwp_pc_filter_widget_args' 
 
 /**
  * Filters the main query if a pwwp_pc query var is set to true.
+ *
  * @param  object $query WP_Query object.
  * @return void
  */
 function pwwp_pc_filter_wp_query_object_on_categories( $query ) {
 
 	// check if we have a 'pwwp_pc' query var set to true.
-	$pwwp_pc_show = $query->get('pwwp_pc');
-	if( $pwwp_pc_show ){
+	$pwwp_pc_show = $query->get( 'pwwp_pc' );
+	if ( $pwwp_pc_show ) {
 
 		// only act on the main page query
 		if ( $query->is_main_query() ) {
-	    	// get original meta query if there is one.
-	    	$meta_query = $query->get('meta_query');
-	    	// add our meta query.
-	    	$meta_query[] = array(
-	            'key'=>'_pwwp_pc_selected_id',
-	        );
+			// get original meta query if there is one.
+			$meta_query = $query->get( 'meta_query' );
+			// add our meta query.
+			$meta_query[] = array(
+				'key' => '_pwwp_pc_selected_id',
+			);
 			// set the new meta query.
-	    	$query->set('meta_query',$meta_query);
+			$query->set( 'meta_query',$meta_query );
 		}
 	}
 
@@ -61,22 +62,23 @@ add_action( 'pre_get_posts', 'pwwp_pc_filter_wp_query_object_on_categories' );
  * @param  array $vars Array of currently avialable query_vars.
  * @return array       Maybe updated array of query_vars.
  */
-function custom_query_vars_filter($vars) {
-  $vars[] = 'pwwp_pc';
-  return $vars;
+function custom_query_vars_filter( $vars ) {
+	$vars[] = 'pwwp_pc';
+	return $vars;
 }
 add_filter( 'query_vars', 'custom_query_vars_filter' );
 
 /**
  * Filter the category list links to for our primary_category widget.
+ *
  * @param  string $output String of html containing list items and maybe links.
  * @param  array  $args   Array of args passed to the parent function.
  * @return string         String of html with maybe updated links.
  */
-function pwwp_pc_filter_category_list_links( $output, $args ){
+function pwwp_pc_filter_category_list_links( $output, $args ) {
 
 	// if $args has a 'meta_key' with the value we want.
-	if( array_key_exists( 'meta_key', $args ) && '_pwwp_pc_selected_id' === $args['meta_key'] ){
+	if ( array_key_exists( 'meta_key', $args ) && '_pwwp_pc_selected_id' === $args['meta_key'] ) {
 		// pattern to find all links.
 		$pattern = '/http:\/\/[^"]*?[^"]+/';
 		// append our query var to the links.
@@ -89,4 +91,4 @@ function pwwp_pc_filter_category_list_links( $output, $args ){
 		return $output;
 	}
 }
-add_filter('wp_list_categories', 'pwwp_pc_filter_category_list_links', 10, 2 );
+add_filter( 'wp_list_categories', 'pwwp_pc_filter_category_list_links', 10, 2 );
