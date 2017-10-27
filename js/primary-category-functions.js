@@ -110,7 +110,15 @@ function pwwp_pc_toggle_button_in_label( element = false, toAdd = true ) {
 			// find the item we want (a button to remove).
 			var item = jQuery( jQuery( container ).find( '.pwwp-pc-primary' ) );
 			// remove the button.
-			jQuery( jQuery(item).first() ).remove();
+			if( jQuery( item ).first().is(':disabled') ) {
+				// the button being removed is the selected primary category,
+				// click next button to prevent hanging data.
+				jQuery( jQuery(item).first() ).remove();
+				jQuery( '#categorychecklist' ).find( '.pwwp-pc-primary' ).first().click();
+			} else {
+				// just remove button.
+				jQuery( jQuery(item).first() ).remove();
+			}
 			// remove the class from the container.
 			jQuery( container ).parent().parent().removeClass( 'pwwp-pc-checked' );
 		}
