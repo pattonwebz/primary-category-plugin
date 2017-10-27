@@ -15,7 +15,8 @@ if ( ! class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
 	 * PWWP_Widget_Primary_Categories class.
 	 *
 	 * This class is based off the WP_Widget_Categories class provided by core.
-	 * It is an exact duplicate except 2 filter names were changed.
+	 * It is an exact duplicate except 2 filter names were changed, count option
+	 * is off and the string '?pwwp_pc=true' is added to dropdown handler JS.
 	 *
 	 * @extends WP_Widget
 	 *
@@ -87,7 +88,7 @@ if ( ! class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
 		var dropdown = document.getElementById( "<?php echo esc_js( $dropdown_id ); ?>" );
 		function onCatChange() {
 			if ( dropdown.options[ dropdown.selectedIndex ].value > 0 ) {
-				location.href = "<?php echo home_url(); ?>/?cat=" + dropdown.options[ dropdown.selectedIndex ].value;
+				location.href = "<?php echo home_url(); ?>/?cat=" + dropdown.options[ dropdown.selectedIndex ].value + '&pwwp_pc=true';
 			}
 		}
 		dropdown.onchange = onCatChange;
@@ -156,9 +157,6 @@ if ( ! class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
 
 			<p><input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'dropdown' ); ?>" name="<?php echo $this->get_field_name( 'dropdown' ); ?>"<?php checked( $dropdown ); ?> />
 			<label for="<?php echo $this->get_field_id( 'dropdown' ); ?>"><?php _e( 'Display as dropdown' ); ?></label><br />
-
-			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>"<?php checked( $count ); ?> />
-			<label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show post counts' ); ?></label><br />
 
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'hierarchical' ); ?>" name="<?php echo $this->get_field_name( 'hierarchical' ); ?>"<?php checked( $hierarchical ); ?> />
 			<label for="<?php echo $this->get_field_id( 'hierarchical' ); ?>"><?php _e( 'Show hierarchy' ); ?></label></p>
