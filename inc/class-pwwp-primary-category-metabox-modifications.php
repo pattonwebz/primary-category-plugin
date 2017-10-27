@@ -119,27 +119,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				wp_die();
 			}
 
-
-			// TODO: Generate better response.
-			/*
-			foreach ( $results as $result ) {
-				if ( $result ) {
-					// this is a successful update.
-					if ( true === $result ) {
-						// this was an update.
-						$response .= 'value updated.';
-					} else {
-						// this was a new key.
-						$response .= 'new key: ' . $result;
-					}
-				} else {
-					$response .= 'fail';
-				}
-			}
-			echo esc_html( $response );
-			*/
-
-			// wp_die() triggers the return of the response.
+			// shoould already be dead before here, if not...
 			wp_die();
 
 		}
@@ -166,22 +146,12 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
 			// if we have an old term id remove this post from the term meta.
 			if ( $old_term_id && $post_id ) {
-				error_log( 'old term', 0 );
-				error_log( print_r( $old_term_id, true ), 0 );
-				error_log( 'post id: ' . $post_id, 0 );
 				// get the meta for our key, false = we want the array.
 				$old_meta = get_term_meta( $old_term_id, '_pwwp_pc_selected_id', true );
-				error_log( 'old meta got', 0 );
-				error_log( print_r( $old_meta, true ), 0 );
-				error_log( count( $old_meta ), 0 );
 				if ( $old_meta && count( $old_meta ) > 0 ) {
-					error_log( 'old meta in', 0 );
 					if( is_array( $old_meta ) ){
 						// find the key of any match for this $post_id.
-						//error_log( 'is array', 0 );
-						if ( ( $keys = self::recursive_array_search( $post_id, $old_meta ) ) !== false ) {
-							error_log( 'got keys', 0 );
-							//error_log( print_r( $old_meta[$key], true ), 0 );
+						if ( ( $keys = array_search( $post_id, $old_meta ) ) !== false ) {
 
 							if( count( $old_meta ) > 1 ) {
 								// if we got a match unset it from the array.
@@ -195,21 +165,14 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 								}
 								// update old terms metadata to remove this post id.
 								$r_old = update_term_meta( $old_term_id, '_pwwp_pc_selected_id', $old_meta );
-								error_log( 'r old 1', 0 );
-								error_log( print_r( $r_old, true ), 0 );
 							} else {
 								$r_old = delete_term_meta( $old_term_id, '_pwwp_pc_selected_id' );
-								error_log( 'r old 2', 0 );
-								error_log( print_r( $r_old, true ), 0 );
 							}
 
 						} else {
-							error_log( 'else - we are not in array???', 0 );
 							if( $post_id === $old_meta ){
 								// delete
 								$r_old = delete_term_meta( $old_term_id, '_pwwp_pc_selected_id' );
-								error_log( 'deleted', 0 );
-								error_log( print_r( $r_old, true ), 0 );
 							}
 
 						}
@@ -231,10 +194,8 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				 * Now update the meta values for the key.
 				 */
 				$term = get_term_by( 'name', $term_nicename, 'category' );
-				error_log( 'term: ' . print_r( $term, true ), 0 );
 				// if $term is object not an error...
 				if ( is_object( $term ) && ! is_wp_error( $term ) ) {
-					error_log( 'is object no error', 0 );
 					$term_id = $term->term_id;
 					$term_slug = $term->slug;
 					// update the post meta with these items.
@@ -244,22 +205,15 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 					// set this value early as a default incase it fails.
 					$results['term_meta'] = false;
 					$new_term_meta = get_term_meta( $term_id, '_pwwp_pc_selected_id', true );
-					error_log( 'new term meta: ' . print_r( $new_term_meta, true ), 0 );
 					if ( is_array( $new_term_meta ) ) {
-						error_log( '$new_term_meta is array', 0 );
-						error_log( print_r( $new_term_meta, true ), 0 );
-						error_log( count( $new_term_meta ), 0 );
 						// since this is an array check if this post id is already in it.
 						if ( false === ( $key = array_search( $post_id, $new_term_meta ) ) ) {
 							// we're not in the array already, add us
 							$new_term_meta[] = $post_id;
 							// delete_term_meta( $term_id, '_pwwp_pc_selected_id' );
 							$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', $new_term_meta );
-							error_log( 'not in array', 0 );
-							error_log( print_r( $results, true ), 0 );
 						}
 					} else {
-						error_log( 'ISNT AN ARRAY', 0 );
 						// isn't an array
 						// if not an exact match then update...
 						if( (int)$post_id === (int)$new_term_meta ){
@@ -268,8 +222,6 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 							$update_term_meta = array( $post_id );
 							delete_term_meta( $term_id, '_pwwp_pc_selected_id' );
 							$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', $update_term_meta );
-							error_log( 'not an array', 0 );
-							error_log( print_r( $results, true ), 0 );
 						}
 
 					}
@@ -280,17 +232,6 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
 			return $results;
 
-		}
-
-		public static function recursive_array_search($needle,$haystack) {
-		    foreach($haystack as $key=>$value) {
-		        if($needle===$value) {
-		            return array($key);
-		        } else if (is_array($value) && $subkey = self::recursive_array_search($needle,$value)) {
-		            array_unshift($subkey, $key);
-		            return $subkey;
-		        }
-		    }
 		}
 
 	}
