@@ -37,16 +37,38 @@ function pwwp_pc_filter_wp_query_object_on_categories( $query ) {
 
 	// check if we have a 'pwwp_pc' query var set to true.
 	$pwwp_pc_show = $query->get( 'pwwp_pc' );
+
 	if ( $pwwp_pc_show ) {
 
 		// only act on the main page query.
 		if ( $query->is_main_query() ) {
+
+			// if we're on a category archive make sure only posts set to this exact category are shown.
+			$category = $query->get( 'category_name' );
+			$cat = false;
+			if( $category ) {
+				// if we're on category archive then get term by the slug from query var.
+				$cat = get_term_by( 'slug', $category, 'category' );
+			}
+
+			// build an array of args to pass as meta query.
+			$mq = array(
+				'key' 		=> '_pwwp_pc_selected_id',
+			);
+			// if we have a term in $cat use it's ID as the value of meta key.
+			if ( $cat && ! is_wp_error( $cat ) ) {
+				// merge these args into the one containing just the key.
+				$mq = array_merge( $mq, array(
+					'value'		=> $cat->term_id,
+					'compare'	=> '=',
+				) );
+			}
+
 			// get original meta query if there is one.
 			$meta_query = $query->get( 'meta_query' );
-			// add our meta query.
-			$meta_query[] = array(
-				'key' => '_pwwp_pc_selected_id',
-			);
+			// add our meta query to it.
+			$meta_query[] = $mq;
+
 			// set the new meta query.
 			$query->set( 'meta_query', $meta_query );
 		}
