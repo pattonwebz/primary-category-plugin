@@ -46,7 +46,7 @@ function pwwp_pc_filter_wp_query_object_on_categories( $query ) {
 			// if we're on a category archive make sure only posts set to this exact category are shown.
 			$category = $query->get( 'category_name' );
 			$cat = false;
-			if( $category ) {
+			if ( $category ) {
 				// if we're on category archive then get term by the slug from query var.
 				$cat = get_term_by( 'slug', $category, 'category' );
 			}
