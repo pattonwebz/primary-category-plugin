@@ -31,7 +31,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			// AJAX request to update post_meta based on selection of Primary Category.
 			add_action( 'wp_ajax_pwwp_pc_save_primary_category', array( $this, 'save_primary_category_metadata' ), 10 );
 			// on post save we want to update some term meta depending on categories selected at savetime.
-			add_action( 'save_post', array( $this, 'on_save_term_metadata_check'), 10, 3 );
+			add_action( 'save_post', array( $this, 'on_save_term_metadata_check' ), 10, 3 );
 		}
 
 		/**
@@ -140,7 +140,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 					$found_in = array();
 					foreach ( $terms as $term ) {
 						$meta = get_term_meta( $term->term_id, '_pwwp_pc_selected_id', true );
-						if( $meta ){
+						if ( $meta ) {
 							// check are we supposed to be in this array?
 							$add_to_array = false;
 							if ( (int) $primary_category_id === (int) $term->term_id ) {
@@ -157,10 +157,9 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 									update_term_meta( $term->term_id, '_pwwp_pc_selected_id', $meta );
 									$found_in[] = $term->$term_id;
 								}
-
 							} else {
 								// we are in the array, are we supposed to be?
-								if( ! $add_to_array ) {
+								if ( ! $add_to_array ) {
 									// not supposed to be in this array, unset.
 									unset( $meta[ $key ] );
 								} else {
@@ -172,7 +171,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 						}
 					}
 					// if we have an array of term ids we are found in...
-					if( ! empty( $found_in ) ){
+					if ( ! empty( $found_in ) ) {
 						// make sure we are in the term tagged as primary.
 						$key = array_search( $primary_category_id, $found_in );
 						if ( false === $key ) {
@@ -180,14 +179,14 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 							$meta = get_term_meta( $primary_category_id, '_pwwp_pc_selected_id', true );
 							$meta[] = $post_id;
 							update_term_meta( $primary_category_id, '_pwwp_pc_selected_id', $meta );
-						} elseif ( is_array( $key ) ){
+						} elseif ( is_array( $key ) ) {
 							// we got an array.. we are in more than 1 term when we shouldn't be.
 						}
 					} else {
 						// we weren't found in any of our terms... add us.
 						$nope = false;
-						foreach( $terms as $term ) {
-							if ( $term->term_id === $primary_category_id ){
+						foreach ( $terms as $term ) {
+							if ( $term->term_id === $primary_category_id ) {
 								// we are tagged with this term but not in the term meta, add us.
 								$meta = get_term_meta( $term->term_id, '_pwwp_selected_id', true );
 								$meta[] = $post_id;
@@ -204,8 +203,8 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 							delete_post_meta( $post_id, '_pwwp_selected_slug' );
 						}
 					}
-				}
-			}
+				}// End if().
+			}// End if().
 
 		}
 
