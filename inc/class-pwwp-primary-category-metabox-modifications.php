@@ -35,12 +35,12 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 		}
 
 		/**
-		 * output_primary_category_admin_script
+		 * Output edit screen admin script and localized data.
 		 *
 		 * @param  string $hook text name for the hook currently running.
 		 */
 		public function output_primary_category_admin_script( $hook ) {
-			// get some variables we'll use in the script.#
+			// get some variables we'll use in the script.
 			global $post;
 
 			// if on 'post-new' or 'post' pages then enqueue our scripts.
@@ -97,8 +97,8 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				wp_die();
 			}
 			// TODO: sanitize!!!
-			$post_id = (int) $_POST['ID'];
-			$term_nicename = (string) wp_unslash( $_POST['category'] );
+			$post_id = intval( $_POST['ID'] );
+			$term_nicename = sanitize_text_field( wp_unslash( $_POST['category'] ) );
 
 			/**
 			 * Before any setting of items, lets do some unsetting of term meta.
@@ -112,7 +112,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
 			// printing out the results isn't the best...
 			if ( $results ) {
-				$response = print_r( $results, true );
+				// $response = print_r( $results, true );
 				// loop through the results to generate a response.
 				wp_send_json_success( $response );
 				wp_die();
@@ -125,6 +125,8 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
 		/**
 		 * This is used to save some term meta, fired on 'save_post' hook.
+		 *
+		 * @param  integer $post_id a number of a post id.
 		 */
 		public function save_term_metadata( $post_id ) {
 			$term_id = get_post_meta( $post_id, '_pwwp_pc_selected_id', true );
@@ -141,6 +143,12 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			}
 		}
 
+		/**
+		 * Rests any old metadata tied to a specific term.
+		 *
+		 * @param integer $post_id     id of a post.
+		 * @param integer $old_term_id id of a term.
+		 */
 		private static function reset_old_meta( $post_id = 0, $old_term_id = 0 ) {
 
 			// if we have an old term id remove this post from the term meta.
@@ -150,8 +158,9 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				if ( $old_meta && count( $old_meta ) > 0 ) {
 					if ( is_array( $old_meta ) ) {
 						// find the key of any match for this $post_id.
-						if ( ( $key = array_search( $post_id, $old_meta ) ) !== false ) {
-							
+						$key = array_search( $post_id, $old_meta );
+						if ( false !== $key ) {
+
 							if ( count( $old_meta ) > 1 ) {
 								// if we got a match unset it from the array.
 								unset( $old_meta[ $key ] );
@@ -172,7 +181,13 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
 		}
 
-		private static function update_new_meta( $post_id = 0, $term_nicename = 0 ) {
+		/**
+		 * Updates the new term with this posts id.
+		 *
+		 * @param  integer $post_id       id of a post.
+		 * @param  string  $term_nicename nicename of a term.
+		 */
+		private static function update_new_meta( $post_id = 0, $term_nicename = '' ) {
 
 			$results = false;
 			if ( $term_nicename && $post_id ) {
@@ -194,7 +209,8 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 					$new_term_meta = get_term_meta( $term_id, '_pwwp_pc_selected_id', true );
 					if ( is_array( $new_term_meta ) ) {
 						// since this is an array check if this post id is already in it.
-						if ( false === ( $key = array_search( $post_id, $new_term_meta ) ) ) {
+						$key = array_search( $post_id, $new_term_meta );
+						if ( false === $key ) {
 							// we're not in the array, add us and update.
 							$new_term_meta[] = $post_id;
 							$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', $new_term_meta );
@@ -205,9 +221,8 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 						delete_term_meta( $term_id, '_pwwp_pc_selected_id' );
 						$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', $update_term_meta );
 					}
-
 				}
-			}// End if().
+			} // End if().
 
 			return $results;
 
