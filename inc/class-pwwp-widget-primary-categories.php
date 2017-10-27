@@ -1,6 +1,6 @@
 <?php
  /**
-  * class-primary-category-widget.php
+  * The class-primary-category-widget.php file
   *
   * Adds a class to output necesary items for a widget. This class is based on
   * the core category widget but is modified to only output categories that are

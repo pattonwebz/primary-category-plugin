@@ -1,6 +1,6 @@
 <?php
  /**
-  * metaboxes.php
+  * The class-pwwp-primary-category-metabox-modifications.php file.
   *
   * Adds and modifies metaboxes on the post editor to enable tagging of specific
   * categories as 'primary' category for that post.

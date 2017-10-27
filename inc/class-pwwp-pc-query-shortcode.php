@@ -1,6 +1,6 @@
 <?php
  /**
-  * class-pwwp-pc-query-shorcode.php
+  * The class-pwwp-pc-query-shorcode.php file
   *
   * Adds a shortcode that can be used to grab the list of posts from a Category
   * where the post has it tagged as the 'Primary Category'.
