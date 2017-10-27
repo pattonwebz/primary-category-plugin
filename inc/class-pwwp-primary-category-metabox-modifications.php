@@ -31,7 +31,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			// AJAX request to update post_meta based on selection of Primary Category.
 			add_action( 'wp_ajax_pwwp_pc_save_primary_category', array( $this, 'save_primary_category_metadata' ), 10 );
 			// on post save we want to update some term meta depending on categories selected at savetime.
-			// add_action( 'save_post', array( $this, 'save_term_metadata' ) );
+			add_action( 'save_post', array( $this, 'on_save_term_metadata_check'), 10, 3 );
 		}
 
 		/**
@@ -114,7 +114,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			if ( $results ) {
 				// $response = print_r( $results, true );
 				// loop through the results to generate a response.
-				wp_send_json_success( $response );
+				wp_send_json_success( $results );
 				wp_die();
 			}
 
@@ -128,19 +128,85 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 		 *
 		 * @param  integer $post_id a number of a post id.
 		 */
-		public function save_term_metadata( $post_id ) {
-			$term_id = get_post_meta( $post_id, '_pwwp_pc_selected_id', true );
-			if ( $term_id ) {
-				$term_meta_value = get_term_meta( $term_id, '_pwwp_pc_selected_id', true );
-				if ( $term_meta_value ) {
-					$term_meta_value[] = (int) $post_id;
-				} else {
-					$term_meta_value = array(
-						(int) $post_id,
-					);
+		public function on_save_term_metadata_check( $post_id, $post, $update ) {
+
+			$terms = wp_get_post_terms( $post_id, 'category' );
+			// if we have a terms array and it's not an error.
+			if ( is_array( $terms ) && ! is_wp_error( $terms ) ) {
+				// get the term id for any primary category set to the post.
+				$primary_category_id = get_post_meta( $post_id, '_pwwp_pc_selected_id', true );
+				if ( $primary_category_id ) {
+
+					$found_in = array();
+					foreach ( $terms as $term ) {
+						$meta = get_term_meta( $term->term_id, '_pwwp_pc_selected_id', true );
+						if( $meta ){
+							// check are we supposed to be in this array?
+							$add_to_array = false;
+							if ( (int) $primary_category_id === (int) $term->term_id ) {
+								// we are supposed to be in the array.
+								$add_to_array = true;
+							}
+
+							// find out if we're in the list of ids.
+							$key = array_search( $post_id, $meta );
+							if ( false === $key ) {
+								// we're not in the array
+								if ( $add_to_array ) {
+									$meta[] = $post_id;
+									update_term_meta( $term->term_id, '_pwwp_pc_selected_id', $meta );
+									$found_in[] = $term->$term_id;
+								}
+
+							} else {
+								// we are in the array, are we supposed to be?
+								if( ! $add_to_array ) {
+									// not supposed to be in this array, unset.
+									unset( $meta[ $key ] );
+								} else {
+									$found_in[] = $term->term_id;
+								}
+							}
+						} else {
+
+						}
+					}
+					// if we have an array of term ids we are found in...
+					if( ! empty( $found_in ) ){
+						// make sure we are in the term tagged as primary.
+						$key = array_search( $primary_category_id, $found_in );
+						if ( false === $key ) {
+							// We were not found in the array when we should be...
+							$meta = get_term_meta( $primary_category_id, '_pwwp_pc_selected_id', true );
+							$meta[] = $post_id;
+							update_term_meta( $primary_category_id, '_pwwp_pc_selected_id', $meta );
+						} elseif ( is_array( $key ) ){
+							// we got an array.. we are in more than 1 term when we shouldn't be.
+						}
+					} else {
+						// we weren't found in any of our terms... add us.
+						$nope = false;
+						foreach( $terms as $term ) {
+							if ( $term->term_id === $primary_category_id ){
+								// we are tagged with this term but not in the term meta, add us.
+								$meta = get_term_meta( $term->term_id, '_pwwp_selected_id', true );
+								$meta[] = $post_id;
+								update_term_meta( $term->$term_id, '_pwwp_selected_id', $meta );
+								$nope = true;
+							}
+						}
+						// since we got this far and $nope wasn't updated then
+						// we were not able to figure out what category we
+						// should be in... remove the PC from the post meta :(
+						if ( ! $nope ) {
+							delete_post_meta( $post_id, '_pwwp_selected' );
+							delete_post_meta( $post_id, '_pwwp_selected_id' );
+							delete_post_meta( $post_id, '_pwwp_selected_slug' );
+						}
+					}
 				}
-				$r = update_term_meta( $term_id, '_pwwp_pc_selected_id', $term_meta_value );
 			}
+
 		}
 
 		/**
