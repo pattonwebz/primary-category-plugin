@@ -153,7 +153,7 @@ function pwwp_pc_update_custom_metabox_on_success( success = false, value ) {
  * @param  {String} [cat=''] a string containing the nicename of category to save in post meta
  * @return return NULL on failure
  */
-function pwwp_make_ajax_request( category = '' ) {
+function pwwp_pc_make_ajax_request( category = '' ) {
 	// no category passed will result in fail in request...
 	if ( '' === category ) {
 		// so there was no category passed, return.
@@ -271,7 +271,7 @@ function pwwp_pc_button_click_handler( event ) {
 
 		console.log( 'will make request with this category: ' + cat )
 		// trigger the ajax request to update category in post meta.
-		pwwp_make_ajax_request( cat );
+		pwwp_pc_make_ajax_request( cat );
 	} else {
 		/**
 		 * This else clause should never trigger, if it does set things back to

@@ -84,11 +84,11 @@ add_action( 'pre_get_posts', 'pwwp_pc_filter_wp_query_object_on_categories' );
  * @param  array $vars Array of currently avialable query_vars.
  * @return array       Maybe updated array of query_vars.
  */
-function custom_query_vars_filter( $vars ) {
+function pwwp_pc_custom_query_vars_filter( $vars ) {
 	$vars[] = 'pwwp_pc';
 	return $vars;
 }
-add_filter( 'query_vars', 'custom_query_vars_filter' );
+add_filter( 'query_vars', 'pwwp_pc_custom_query_vars_filter' );
 
 /**
  * Filter the category list links to for our primary_category widget.
@@ -114,3 +114,4 @@ function pwwp_pc_filter_category_list_links( $output, $args ) {
 	}
 }
 add_filter( 'wp_list_categories', 'pwwp_pc_filter_category_list_links', 10, 2 );
+add_filter( 'wp_dropdown_cats', 'pwwp_pc_filter_category_list_links', 10, 2 );
