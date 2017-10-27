@@ -81,7 +81,7 @@ if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 				// start the loop.
 				if ( $query->have_posts() ) {
 					ob_start();
-					echo '<ul>';
+					echo '<ul class="pwwp-pc-query-wrapper">';
 					while ( $query->have_posts() ) {
 						$query->the_post();
 						echo '<li><a href="' . esc_url( get_the_permalink() ) . '">' . esc_html( get_the_title() ) . '</a></li>';
