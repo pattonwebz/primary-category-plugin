@@ -150,17 +150,11 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				if ( $old_meta && count( $old_meta ) > 0 ) {
 					if ( is_array( $old_meta ) ) {
 						// find the key of any match for this $post_id.
-						if ( ( $keys = array_search( $post_id, $old_meta ) ) !== false ) {
-
+						if ( ( $key = array_search( $post_id, $old_meta ) ) !== false ) {
+							
 							if ( count( $old_meta ) > 1 ) {
 								// if we got a match unset it from the array.
-								foreach ( $keys as $key1 => $key2 ) {
-									if ( $key2 ) {
-										unset( $old_meta[ $key1 ][ $key2 ] );
-									} else {
-										unset( $old_meta[ $key1 ] );
-									}
-								}
+								unset( $old_meta[ $key ] );
 								// update old terms metadata to remove this post id.
 								$r_old = update_term_meta( $old_term_id, '_pwwp_pc_selected_id', $old_meta );
 							} else {
