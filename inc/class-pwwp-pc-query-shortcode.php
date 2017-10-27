@@ -23,8 +23,6 @@ if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 		}
 
 		/**
-		 * primary_category_query_shortcode
-		 *
 		 * Function for the shortcode to perform a query for specific posts and
 		 * output a list of post titles.
 		 *
@@ -40,7 +38,7 @@ if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 			), $atts, 'primary_category_query' );
 			// if we have neither an ID, a slug or a name then we should return nothing...
 			if ( '' === $atts['id'] && '' === $atts['slug'] && '' === $atts['name'] ) {
-				// return noting... except an inline html comment
+				// return noting... except an inline html comment.
 				return '<!-- no id, slug or name passed to shortcode -->';
 			} else {
 				// start empty var as a default return.
@@ -63,7 +61,7 @@ if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 					);
 				}
 
-				// WP_Query arguments
+				// WP_Query arguments.
 				$sticky_posts = get_option( 'sticky_posts' );
 
 				$args = array(
@@ -74,13 +72,13 @@ if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 					'post__not_in'		=> $sticky_posts,
 				);
 
-				// merge the $args array with the generated meta_key and meta_value args
+				// merge the $args array with the generated meta_key and meta_value args.
 				$args = array_merge( $args, $tax_query_field );
 
-				// The Query
+				// the Query.
 				$query = new WP_Query( $args );
 
-				// start the loop
+				// start the loop.
 				if ( $query->have_posts() ) {
 					ob_start();
 					echo '<ul>';
@@ -91,10 +89,10 @@ if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 					echo '</ul>';
 					$html = ob_get_clean();
 
-					/* Restore original Post Data */
+					// restore original Post Data.
 					wp_reset_postdata();
 				} else {
-					// no posts found
+					return '<p class="pwwp-pc-none">' . esc_html__( 'No Posts to display in primary category.', 'pwwp_pc' ) . '</p>';
 				}
 			}// End if().
 

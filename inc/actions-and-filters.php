@@ -39,7 +39,7 @@ function pwwp_pc_filter_wp_query_object_on_categories( $query ) {
 	$pwwp_pc_show = $query->get( 'pwwp_pc' );
 	if ( $pwwp_pc_show ) {
 
-		// only act on the main page query
+		// only act on the main page query.
 		if ( $query->is_main_query() ) {
 			// get original meta query if there is one.
 			$meta_query = $query->get( 'meta_query' );
@@ -48,7 +48,7 @@ function pwwp_pc_filter_wp_query_object_on_categories( $query ) {
 				'key' => '_pwwp_pc_selected_id',
 			);
 			// set the new meta query.
-			$query->set( 'meta_query',$meta_query );
+			$query->set( 'meta_query', $meta_query );
 		}
 	}
 
@@ -82,9 +82,9 @@ function pwwp_pc_filter_category_list_links( $output, $args ) {
 		// pattern to find all links.
 		$pattern = '/http:\/\/[^"]*?[^"]+/';
 		// append our query var to the links.
-		$results = preg_replace( $pattern, '$0' . '?pwwp_pc=true', $output );
+		$results = preg_replace( $pattern, '$0?pwwp_pc=true', $output );
 		// if we have update html then cast it to $output.
-		if ( $result ) {
+		if ( $results ) {
 			$output = $results;
 		}
 		// return the maybe updated html.

@@ -10,7 +10,6 @@
   * @package  Primary Category Plugin
   */
 
-
 /* Check if Class Exists. */
 if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
@@ -23,7 +22,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 	class PWWP_Primary_Category_Metabox_Modifications {
 
 		/**
-		 * constructor function to add actions necessary for adding the primary
+		 * Constructor function to add actions necessary for adding the primary
 		 * category functions to the editor screen.
 		 */
 		public function __construct() {
@@ -31,7 +30,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'output_primary_category_admin_script' ), 10 );
 			// AJAX request to update post_meta based on selection of Primary Category.
 			add_action( 'wp_ajax_pwwp_pc_save_primary_category', array( $this, 'save_primary_category_metadata' ), 10 );
-			// on post save we want to update some term meta
+			// on post save we want to update some term meta depending on categories selected at savetime.
 			// add_action( 'save_post', array( $this, 'save_term_metadata' ) );
 		}
 
@@ -82,7 +81,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				$value = get_post_meta( $id, '_pwwp_pc_selected', true );
 			}
 			if ( false !== $echo ) {
-				echo $value;
+				echo esc_html( $value );
 			} else {
 				return $value;
 			}
@@ -99,7 +98,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			}
 			// TODO: sanitize!!!
 			$post_id = (int) $_POST['ID'];
-			$term_nicename = $_POST['category'];
+			$term_nicename = (string) wp_unslash( $_POST['category'] );
 
 			/**
 			 * Before any setting of items, lets do some unsetting of term meta.
@@ -169,7 +168,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 							}
 						} else {
 							if ( $post_id === $old_meta ) {
-								// delete
+								// delete the entire term meta.
 								$r_old = delete_term_meta( $old_term_id, '_pwwp_pc_selected_id' );
 							}
 						}
@@ -202,22 +201,17 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 					if ( is_array( $new_term_meta ) ) {
 						// since this is an array check if this post id is already in it.
 						if ( false === ( $key = array_search( $post_id, $new_term_meta ) ) ) {
-							// we're not in the array already, add us
+							// we're not in the array, add us and update.
 							$new_term_meta[] = $post_id;
-							// delete_term_meta( $term_id, '_pwwp_pc_selected_id' );
 							$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', $new_term_meta );
 						}
 					} else {
-						// isn't an array
-						// if not an exact match then update...
-						if ( (int) $post_id === (int) $new_term_meta ) {
-							// we probably do nothing here
-						} else {
-							$update_term_meta = array( $post_id );
-							delete_term_meta( $term_id, '_pwwp_pc_selected_id' );
-							$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', $update_term_meta );
-						}
+						// isn't an array, it should be (or be empty).
+						$update_term_meta = array( $post_id );
+						delete_term_meta( $term_id, '_pwwp_pc_selected_id' );
+						$results['term_meta'] = update_term_meta( $term_id, '_pwwp_pc_selected_id', $update_term_meta );
 					}
+
 				}
 			}// End if().
 
