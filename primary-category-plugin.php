@@ -35,6 +35,6 @@ include( PRIMARY_CATEGORY_PLUGIN_DIR . 'inc/class-pwwp-pc-query-shortcode.php' )
 
 /**
  * TODO: Work out how to save and get term_meta properly
- * 		 NOTE: setting and deleting posts from meta in a sane way could be done by having 1 more post meta key which is not updated through ajax - use this as a note of the previous term and remove from it while adding to the new term.
+ * NOTE: setting and deleting posts from meta in a sane way could be done by having 1 more post meta key which is not updated through ajax - use this as a note of the previous term and remove from it while adding to the new term.
  * TODO: Deal with unchecking of primary category.
  */

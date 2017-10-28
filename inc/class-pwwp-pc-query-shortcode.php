@@ -33,7 +33,7 @@ if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 				'id' => '',
 				'slug' => '',
 				'name' => '',
-				'post_type'	=> 'post',
+				'post_type' => 'post',
 				'limit' => '10',
 			), $atts, 'primary_category_query' );
 			// if we have neither an ID, a slug or a name then we should return nothing...
@@ -46,18 +46,18 @@ if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 				// here we have either an id, a slug or a name.
 				if ( '' !== $atts['id'] ) {
 					$tax_query_field = array(
-						'meta_key'		=> '_pwwp_pc_selected_id',
-						'meta_value'	=> $atts['id'],
+						'meta_key'   => '_pwwp_pc_selected_id',
+						'meta_value' => $atts['id'],
 					);
 				} elseif ( '' !== $atts['slug'] ) {
 					$tax_query_field = array(
-						'meta_key'		=> '_pwwp_pc_selected_slug',
-						'meta_value'	=> $atts['slug'],
+						'meta_key'   => '_pwwp_pc_selected_slug',
+						'meta_value' => $atts['slug'],
 					);
 				} elseif ( '' !== $atts['name'] ) {
 					$tax_query_field = array(
-						'meta_key'		=> '_pwwp_pc_selected',
-						'meta_value'	=> $atts['name'],
+						'meta_key'   => '_pwwp_pc_selected',
+						'meta_value' => $atts['name'],
 					);
 				}
 
@@ -65,11 +65,11 @@ if ( ! class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 				$sticky_posts = get_option( 'sticky_posts' );
 
 				$args = array(
-					'post_type'			=> array( $atts['post_type'] ),
-					'post_status'		=> array( 'published' ),
-					'nopaging'			=> true,
-					'posts_per_page'	=> $atts['limit'],
-					'post__not_in'		=> $sticky_posts,
+					'post_type'      => array( $atts['post_type'] ),
+					'post_status'    => array( 'published' ),
+					'nopaging'       => true,
+					'posts_per_page' => $atts['limit'],
+					'post__not_in'   => $sticky_posts,
 				);
 
 				// merge the $args array with the generated meta_key and meta_value args.
