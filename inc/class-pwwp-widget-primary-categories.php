@@ -39,6 +39,9 @@ if ( ! class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
 
 		/**
 		 * Outputs the content for the current Primary Categories widget instance.
+		 *
+		 * @param  array $args     array of args for the widget.
+		 * @param  array $instance array of properties of a current instance of the widget if aplipicable..
 		 */
 		public function widget( $args, $instance ) {
 			static $first_dropdown = true;
@@ -143,7 +146,7 @@ if ( ! class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
 		 * @param array $instance Current settings.
 		 */
 		public function form( $instance ) {
-			// Defaults
+			// Defaults.
 			$instance = wp_parse_args( (array) $instance, array(
 				'title' => '',
 			) );

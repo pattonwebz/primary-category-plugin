@@ -1,3 +1,6 @@
 <?php
-
-// silence is golden
+/**
+ * An empty index.php file.
+ *
+ * Silence is golden.
+ */
