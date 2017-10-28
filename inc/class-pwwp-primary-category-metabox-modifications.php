@@ -54,13 +54,13 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 				// get the id of the current primary category.
 				$current_primary_category_id = get_post_meta( $post_id, '_pwwp_pc_selected_id', true );
 
-				wp_localize_script( 'pwwp-pc-functions', 'pwwp_pc_data', [
+				wp_localize_script( 'pwwp-pc-functions', 'pwwp_pc_data', array(
 					'ajax_url'            => admin_url( 'admin-ajax.php' ),
 					'nonce'               => wp_create_nonce( 'pwwp-pc-functions' ),
 					'post_id'             => $post_id,
 					'primary_category'    => esc_js( $current_primary_category ),
 					'primary_category_id' => (int) $current_primary_category_id,
-				]);
+				) );
 
 			}
 
