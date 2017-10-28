@@ -59,7 +59,7 @@ function pwwp_pc_filter_wp_query_object_on_categories( $query ) {
 			if ( $cat && ! is_wp_error( $cat ) ) {
 				// merge these args into the one containing just the key.
 				$mq = array_merge( $mq, array(
-					'value'	  => $cat->term_id,
+					'value'   => $cat->term_id,
 					'compare' => '=',
 				) );
 			}
