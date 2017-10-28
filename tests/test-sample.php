@@ -18,8 +18,16 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertTrue( true );
 	}
 
+	/**
+	 * Test if a constant defined by plugin is available.
+	 */
 	function test_plugin_loaded() {
-		// we load a constant in the plugin so if we're loaded this should be true.
 		$this->assertTrue( defined( 'PRIMARY_CATEGORY_PLUGIN_DIR' ) );
+	}
+	/**
+	 * Test if a constant defined by plugin is available.
+	 */
+	function test_plugin_loaded() {
+		$this->assertTrue( defined( 'PRIMARY_CATEGORY_PLUGIN_URL' ) );
 	}
 }
