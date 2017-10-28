@@ -12,7 +12,7 @@ branches:
 jobs:
   fast_finish: true
   include:
-    - php: 5.2
+    - php: 5.3
       # As 'trusty' is not supporting PHP 5.2/5.3 anymore, we need to force using 'precise'.
       dist: precise
     - php: 5.6
