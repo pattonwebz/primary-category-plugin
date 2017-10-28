@@ -126,6 +126,8 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 		 * This is used to save some term meta, fired on 'save_post' hook.
 		 *
 		 * @param  integer $post_id a number of a post id.
+		 * @param  object  $post    a WP_Post object contianing the updated content.
+		 * @param  boolean $update  true if update, false if new post.
 		 */
 		public function on_save_term_metadata_check( $post_id, $post, $update ) {
 
@@ -150,7 +152,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 							// find out if we're in the list of ids.
 							$key = array_search( $post_id, $meta );
 							if ( false === $key ) {
-								// we're not in the array
+								// we're not in the array.
 								if ( $add_to_array ) {
 									$meta[] = $post_id;
 									update_term_meta( $term->term_id, '_pwwp_pc_selected_id', $meta );
@@ -195,7 +197,7 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 						}
 						// since we got this far and $nope wasn't updated then
 						// we were not able to figure out what category we
-						// should be in... remove the PC from the post meta :(
+						// should be in... remove the PC from the post meta :(.
 						if ( ! $nope ) {
 							delete_post_meta( $post_id, '_pwwp_selected' );
 							delete_post_meta( $post_id, '_pwwp_selected_id' );
