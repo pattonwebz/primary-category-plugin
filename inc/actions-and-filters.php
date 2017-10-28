@@ -17,7 +17,7 @@
 function pwwp_pc_filter_widget_args( $args ) {
 	// merge the existing args with ours containing a meta_key value.
 	$args = array_merge( $args, array(
-		'meta_key'	=> '_pwwp_pc_selected_id',
+		'meta_key' => '_pwwp_pc_selected_id',
 	) );
 	// return modified args.
 	return $args;
@@ -53,14 +53,14 @@ function pwwp_pc_filter_wp_query_object_on_categories( $query ) {
 
 			// build an array of args to pass as meta query.
 			$mq = array(
-				'key' 		=> '_pwwp_pc_selected_id',
+				'key' => '_pwwp_pc_selected_id',
 			);
 			// if we have a term in $cat use it's ID as the value of meta key.
 			if ( $cat && ! is_wp_error( $cat ) ) {
 				// merge these args into the one containing just the key.
 				$mq = array_merge( $mq, array(
-					'value'		=> $cat->term_id,
-					'compare'	=> '=',
+					'value'   => $cat->term_id,
+					'compare' => '=',
 				) );
 			}
 

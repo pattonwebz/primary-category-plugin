@@ -151,7 +151,7 @@ if ( ! class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
 				'title' => '',
 			) );
 			$title = sanitize_text_field( $instance['title'] );
-			$count = isset( $instance['count'] ) ? (bool) $instance['count'] :false;
+			$count = isset( $instance['count'] ) ? (bool) $instance['count'] : false;
 			$hierarchical = isset( $instance['hierarchical'] ) ? (bool) $instance['hierarchical'] : false;
 			$dropdown = isset( $instance['dropdown'] ) ? (bool) $instance['dropdown'] : false;
 			?>
