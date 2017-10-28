@@ -112,7 +112,6 @@ if ( ! class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 
 			// printing out the results isn't the best...
 			if ( $results ) {
-				// $response = print_r( $results, true );
 				// loop through the results to generate a response.
 				wp_send_json_success( $results );
 				wp_die();
