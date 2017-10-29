@@ -11,14 +11,6 @@
 class SampleTest extends WP_UnitTestCase {
 
 	/**
-	 * A single example test.
-	 */
-	function test_sample() {
-		// Replace this with some actual testing code.
-		$this->assertTrue( true );
-	}
-
-	/**
 	 * Test if a constant defined by plugin is available.
 	 */
 	function test_plugin_loaded_const_dir() {
@@ -41,12 +33,6 @@ class SampleTest extends WP_UnitTestCase {
 	 */
 	function test_widget_class() {
 		$this->assertTrue( class_exists( 'PWWP_Widget_Primary_Categories' ) );
-	}
-	/**
-	 * Test if this from our plugin is loaded and exists.
-	 */
-	function test_metabox_shortcode_class() {
-		$this->assertTrue( class_exists( 'PWWP_PC_Query_Shortcode' ) );
 	}
 
 }
