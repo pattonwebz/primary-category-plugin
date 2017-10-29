@@ -6,8 +6,7 @@
  */
 
 /**
- * Tests to make sure the shortcode widget iw working as expected.
- * TODO: Add tests to make sure things return the same when passed different atts meaning same thing (id, slug, name).
+ * Tests to make sure the shortcode is working as expected.
  */
 class ShortcodeClassTest extends WP_UnitTestCase {
 
@@ -44,6 +43,11 @@ class ShortcodeClassTest extends WP_UnitTestCase {
 		}
 		$this->assertInstanceOf( PWWP_PC_Query_Shortcode::class, $shortcode_obj );
 		return $shortcode_obj;
+	}
+
+	public function test_shortcode_exists() {
+		// test the shortcode exists.
+		$this->assertTrue( shortcode_exists( 'primary_category_query' ) );
 	}
 
 	/**
