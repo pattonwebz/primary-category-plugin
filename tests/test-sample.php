@@ -34,5 +34,4 @@ class SampleTest extends WP_UnitTestCase {
 	function test_widget_class() {
 		$this->assertTrue( class_exists( 'PWWP_Widget_Primary_Categories' ) );
 	}
-
 }
