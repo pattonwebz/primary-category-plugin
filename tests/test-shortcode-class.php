@@ -21,7 +21,7 @@ class ShortcodeClassTest extends WP_UnitTestCase {
 
 	public function setUp() {
 
-		praten::setUp();
+		parent::setUp();
 		// create a post for use in test.
 		$this->post_with_meta = $this->factory->post->create_and_get();
 
