@@ -20,9 +20,11 @@ class WidgetClassTest extends WP_UnitTestCase {
 		$widget_obj = false;
 		if( class_exists( 'PWWP_Widget_Primary_Categories' ) ) {
 			$widget_obj = new PWWP_Widget_Primary_Categories;
-		} else {
 		}
-		$this->assertInstanceOf( PWWP_Widget_Primary_Categories::class, $widget_obj );
+		// in php 5.4 or below this ::class doesn't work :( .
+		//$this->assertInstanceOf( PWWP_Widget_Primary_Categories::class, $widget_obj );
+		$this->assertTrue( $widget_obj instanceof PWWP_Widget_Primary_Categories );
+
 		return $widget_obj;
 	}
 

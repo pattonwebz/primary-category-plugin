@@ -39,9 +39,10 @@ class ShortcodeClassTest extends WP_UnitTestCase {
 		$shortcode_obj = false;
 		if( class_exists( 'PWWP_PC_Query_Shortcode' ) ) {
 			$shortcode_obj = new PWWP_PC_Query_Shortcode;
-		} else {
 		}
-		$this->assertInstanceOf( PWWP_PC_Query_Shortcode::class, $shortcode_obj );
+		// in php 5.4 or below this ::class doesn't work :( .
+		//$this->assertInstanceOf( PWWP_PC_Query_Shortcode::class, $shortcode_obj );
+		$this->assertTrue( $shortcode_obj instanceof PWWP_PC_Query_Shortcode );
 		return $shortcode_obj;
 	}
 

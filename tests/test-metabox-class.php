@@ -20,9 +20,10 @@ class MetaboxClassTest extends WP_UnitTestCase {
 		$metabox_obj = false;
 		if( class_exists( 'PWWP_Primary_Category_Metabox_Modifications' ) ) {
 			$metabox_obj = new PWWP_Primary_Category_Metabox_Modifications;
-		} else {
 		}
-		$this->assertInstanceOf( PWWP_Primary_Category_Metabox_Modifications::class, $metabox_obj );
+		// in php 5.4 or below this ::class doesn't work :( .
+		//$this->assertInstanceOf( PWWP_Primary_Category_Metabox_Modifications::class, $metabox_obj );
+		$this->assertTrue( $metabox_obj instanceof PWWP_Primary_Category_Metabox_Modifications );
 		return $metabox_obj;
 	}
 
