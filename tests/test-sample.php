@@ -17,5 +17,5 @@ class PluginActiveTest extends WP_UnitTestCase {
 		$this->assertTrue( defined( 'PRIMARY_CATEGORY_PLUGIN_DIR' ) );
 		$this->assertTrue( defined( 'PRIMARY_CATEGORY_PLUGIN_URL' ) );
 	}
-
+	
 }
